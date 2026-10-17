@@ -1,0 +1,6 @@
+Client,Client name,Entity,Country,File,Year start,Year end,Account number,Account name,Map number,Closing balance,Prior year
+EXP-101,Export Demo Ltd,company,NZ,YE26-EXP,2025-04-01,2026-03-31,1000,Bank,10.1,1250.50,900.00
+EXP-101,Export Demo Ltd,company,NZ,YE26-EXP,2025-04-01,2026-03-31,3000,Share capital,30.1,-100.00,-100.00
+EXP-101,Export Demo Ltd,company,NZ,YE26-EXP,2025-04-01,2026-03-31,4000,Sales,40.1,(5400.50),-3200.00
+EXP-101,Export Demo Ltd,company,NZ,YE26-EXP,2025-04-01,2026-03-31,6000,General expenses,60.1,4250.00,2400.00
+EXP-101,Export Demo Ltd,company,NZ,YE26-EXP,2025-04-01,2026-03-31,6900,Suspense,,0.00,0.00

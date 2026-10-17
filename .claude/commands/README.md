@@ -1,5 +1,45 @@
-# Slash commands
+# Practice commands
 
-One file per recurring job. Each command tells Claude Code exactly which CLI command to run and how to present the result, so the operator never re-explains the job.
+One recurring job per command. All use scripts/year-end.mjs, except the branded renderers and customisation recipes.
 
-Add a command every time the same ask comes twice. Frontmatter needs a `description:` line. The body is the brief.
+- /clients: Read the client list with entity type, country, manager and partner.
+- /engagements: See every year-end file and what is still open on it.
+- /deadlines: List the files not yet issued by due date, with tax return dates.
+- /engagement: Read one year-end file: status, workpapers, adjustments, queries, review points and notes.
+- /tb: Read a file's trial balance with posted and proposed adjustments and comparatives.
+- /statements: Read the statements of financial performance and position with the equity check.
+- /flux: Analytical review: movements over materiality that no prepared workpaper explains.
+- /workpapers: List workpapers still to prepare or review, by file.
+- /queries: Chase list of open client queries, oldest due first.
+- /review-points: List open review points and how long each has been open.
+- /adjustments: List proposed, posted and withdrawn journals with their effect on profit.
+- /attention: Find overdue files and queries, stale review points, unmapped accounts and unexplained movements.
+- /compliance: Check terms of engagement, NZ minimum requirement references, balance and retention.
+- /history: Read the recorded changes.
+- /insights: Answer the ten questions across the practice's year-end files.
+- /add: Add a client, file, trial balance account, workpaper or client query from a JSON file.
+- /log: Record an internal note on a file.
+- /map: Map an account to a statement line and workpaper.
+- /record-terms: Record the signed terms of engagement for a file.
+- /record-references: Record where the tax reconciliation and associated persons disclosure sit (NZ companies).
+- /propose-adjustment: Propose a balanced journal from a JSON file. It does not touch the balances until posted.
+- /post-adjustment: Post a proposed journal into the final balances.
+- /withdraw-adjustment: Withdraw a proposed journal with a reason.
+- /prepare-workpaper: Record a prepared workpaper with its evidence and conclusion.
+- /review-workpaper: Record a workpaper review by someone other than the preparer.
+- /raise-point: Raise a review point on a workpaper.
+- /clear-point: Clear a review point with the response.
+- /answer-query: Record a client's answer to a query.
+- /mark-prepared: Mark a file prepared once it balances, is mapped, explained and has no open queries.
+- /mark-reviewed: Mark a file reviewed once every workpaper is reviewed and every point cleared.
+- /sign: Record partner sign-off once terms and required references are in place.
+- /issue: Record that the signed accounts went to the client.
+- /roll-forward: Open next year's file from an issued one: accounts, comparatives and workpaper index carried across.
+- /import: Import a mapped Caseware trial balance export. Test with --dry-run first.
+- /export: Export every record and original source row as JSON.
+- /weekly-review: Draft the Monday review from deadlines, attention, queries and review points.
+- /draft-queries: Draft the letter asking a client for the information still needed.
+- /view: Render the branded read-only dashboards.
+- /documents: Render statements, query letters and sign-off sheets.
+- /customise: Change fields, lines and rules to fit the practice.
+- /new-view: Add a read-only report from a question.

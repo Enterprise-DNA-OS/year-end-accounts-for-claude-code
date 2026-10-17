@@ -1,11 +1,94 @@
 [
   {
-    "name": "example",
-    "title": "TODO(author): the first document this industry must produce",
-    "for_each": "select gen_random_uuid() as id, 'Example' as name",
-    "file": "name",
+    "name": "financial-statements",
+    "title": "Financial statements",
+    "for_each": "select e.id,e.code||' '||c.name as label from engagements e join clients c on c.id=e.client_id order by e.code",
+    "file": "label",
     "sections": [
-      { "title": "Details", "sql": "select 'replace me' as item, $1::text as record_id" }
+      {
+        "title": "Entity and period",
+        "sql": "select c.name as entity,c.entity_type,c.jurisdiction,e.period_start,e.period_end,e.status,e.signed_by,e.signed_on from engagements e join clients c on c.id=e.client_id where e.id=$1",
+        "note": "Draft until the status reads signed or issued. Special purpose statements prepared from the trial balance."
+      },
+      {
+        "title": "Statement of financial performance",
+        "sql": "select section,label as line,currency,current_cents,prior_cents from statement_lines where engagement_id=$1 and statement='performance' order by sort",
+        "columns": [
+          "section",
+          "line",
+          "current_cents",
+          "prior_cents"
+        ]
+      },
+      {
+        "title": "Net profit",
+        "sql": "select currency,income_cents,expenses_cents,profit_cents,prior_profit_cents from performance_summary where engagement_id=$1",
+        "columns": [
+          "income_cents",
+          "expenses_cents",
+          "profit_cents",
+          "prior_profit_cents"
+        ]
+      },
+      {
+        "title": "Statement of financial position",
+        "sql": "select section,label as line,currency,current_cents,prior_cents from statement_lines where engagement_id=$1 and statement='position' order by sort",
+        "columns": [
+          "section",
+          "line",
+          "current_cents",
+          "prior_cents"
+        ]
+      },
+      {
+        "title": "Equity",
+        "sql": "select currency,net_assets_cents,opening_equity_cents,current_year_profit_cents,closing_equity_cents from position_summary where engagement_id=$1",
+        "note": "Closing equity is opening capital and retained earnings plus this year's profit. It equals net assets when the trial balance balances and every account is mapped.",
+        "columns": [
+          "net_assets_cents",
+          "opening_equity_cents",
+          "current_year_profit_cents",
+          "closing_equity_cents"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "client-queries",
+    "title": "Information we still need",
+    "for_each": "select distinct e.id,e.code||' '||c.name as label from engagements e join clients c on c.id=e.client_id join queries q on q.engagement_id=e.id where q.status='open' order by label",
+    "file": "label",
+    "sections": [
+      {
+        "title": "To finish your accounts",
+        "sql": "select code as reference,question,due_on as needed_by from queries where engagement_id=$1 and status='open' order by due_on,code",
+        "note": "Draft request for the client. Check the wording before you send it."
+      }
+    ]
+  },
+  {
+    "name": "review-sheet",
+    "title": "Workpaper index and sign-off sheet",
+    "for_each": "select e.id,e.code||' '||c.name as label from engagements e join clients c on c.id=e.client_id order by e.code",
+    "file": "label",
+    "sections": [
+      {
+        "title": "File sign-off",
+        "sql": "select code as file,status,preparer,prepared_on,reviewer,reviewed_on,signed_by,signed_on,terms_reference,issued_on from engagements where id=$1"
+      },
+      {
+        "title": "Workpaper index",
+        "sql": "select code,title,report_line as line,prepared_by,prepared_on,evidence_reference,reviewed_by,reviewed_on from workpapers where engagement_id=$1 order by code"
+      },
+      {
+        "title": "Review points",
+        "sql": "select code,workpaper,raised_by,raised_on,status,point,response,cleared_on from review_points where engagement_id=$1 order by code"
+      },
+      {
+        "title": "Adjustments",
+        "sql": "select j.code,j.status,j.description,t.account_code,t.account_name,l.amount_cents from adjustments j join adjustment_lines l on l.adjustment_id=j.id join tb_lines t on t.id=l.tb_line_id where j.engagement_id=$1 order by j.code,t.account_code",
+        "note": "Debits positive, credits negative."
+      }
     ]
   }
 ]

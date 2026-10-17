@@ -1,0 +1,20 @@
+{
+  "client_code": "Client",
+  "client_name": "Client name",
+  "entity_type": "Entity",
+  "jurisdiction": "Country",
+  "engagement_code": "File",
+  "period_start": "Year start",
+  "period_end": "Year end",
+  "account_code": "Account number",
+  "account_name": "Account name",
+  "line": "Map number",
+  "current": "Closing balance",
+  "prior": "Prior year",
+  "line_codes": {
+    "10.1": "CASH",
+    "30.1": "EQ",
+    "40.1": "REV",
+    "60.1": "EXP"
+  }
+}

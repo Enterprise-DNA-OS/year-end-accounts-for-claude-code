@@ -1,13 +1,71 @@
 [
   {
     "name": "week",
-    "title": "This week",
-    "subtitle": "Year-End Accounts for Claude Code: what needs attention, rendered by npm run view",
+    "title": "Year-end week",
+    "subtitle": "Fictional demo or your selected database. Read-only.",
     "sections": [
       {
+        "title": "Due dates",
+        "note": "Every file not yet issued, soonest first. A negative days to due is overdue.",
+        "sql": "select code as file,client,status,preparer,partner,due_on,days_to_due,return_due_on from engagement_status where status<>'issued' order by due_on,code"
+      },
+      {
         "title": "Needs attention",
-        "note": "TODO(author): point this at the industry's attention view (overdue, stuck, quiet).",
-        "sql": "select 'replace me' as item, 'TODO(author)' as why"
+        "sql": "select * from (select 'Accounts overdue' as issue,code as record,preparer as owner,due_on as due from engagement_status where status<>'issued' and due_on<current_date union all select 'Client query overdue',code,owner,due_on from queries where status='open' and due_on<current_date union all select 'Review point open',r.code,e.preparer,r.raised_on from review_points r join engagements e on e.id=r.engagement_id where r.status='open') x order by due"
+      },
+      {
+        "title": "Ready for the partner",
+        "note": "Reviewed files and anything still holding sign-off.",
+        "sql": "select s.code as file,s.client,s.terms_missing,(s.minimum_requirements_apply and (trim(e.tax_reconciliation_reference)='' or trim(e.associated_persons_reference)='')) as nz_references_missing from engagement_status s join engagements e on e.id=s.id where s.status='reviewed' order by s.code"
+      }
+    ]
+  },
+  {
+    "name": "files",
+    "title": "Year-end files",
+    "sections": [
+      {
+        "title": "Where each file stands",
+        "sql": "select code as file,client,status,tb_difference_cents,unmapped_lines,unprepared_workpapers,unreviewed_workpapers,open_queries,open_review_points,proposed_adjustments,unexplained_movements,currency from engagement_status order by code",
+        "columns": [
+          "file",
+          "client",
+          "status",
+          "tb_difference_cents",
+          "unmapped_lines",
+          "unprepared_workpapers",
+          "unreviewed_workpapers",
+          "open_queries",
+          "open_review_points",
+          "proposed_adjustments",
+          "unexplained_movements"
+        ]
+      },
+      {
+        "title": "Profit against last year",
+        "sql": "select engagement as file,currency,prior_profit_cents,profit_cents,(profit_cents-prior_profit_cents) as change_cents from performance_summary order by engagement"
+      },
+      {
+        "title": "Movements over materiality without a workpaper",
+        "sql": "select engagement as file,label as line,currency,prior_cents,current_cents,movement_cents from movements where not explained order by engagement,line"
+      }
+    ]
+  },
+  {
+    "name": "client-work",
+    "title": "Queries and review points",
+    "sections": [
+      {
+        "title": "Client queries open",
+        "sql": "select q.code,e.code as file,q.owner,q.asked_on,q.due_on,q.question from queries q join engagements e on e.id=q.engagement_id where q.status='open' order by q.due_on"
+      },
+      {
+        "title": "Review points open",
+        "sql": "select r.code,e.code as file,r.workpaper,r.raised_by,r.raised_on,r.point from review_points r join engagements e on e.id=r.engagement_id where r.status='open' order by r.raised_on"
+      },
+      {
+        "title": "Workpapers waiting",
+        "sql": "select e.code as file,w.code as workpaper,w.title,case when w.prepared_on is null then 'to prepare' else 'to review' end as stage from workpapers w join engagements e on e.id=w.engagement_id where w.reviewed_on is null and e.status in ('open','prepared') order by e.code,w.code"
       }
     ]
   }
